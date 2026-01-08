@@ -4,14 +4,14 @@
 import PackageDescription
 
 let package = Package(
-    name: "WhisperTalk",
+    name: "LookMaNoHands",
     platforms: [
         .macOS(.v14)  // Minimum macOS 14 (Sonoma) for @Observable macro
     ],
     products: [
         .executable(
-            name: "WhisperTalk",
-            targets: ["WhisperTalk"]
+            name: "LookMaNoHands",
+            targets: ["LookMaNoHands"]
         )
     ],
     dependencies: [
@@ -19,11 +19,11 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "WhisperTalk",
+            name: "LookMaNoHands",
             dependencies: [
                 .product(name: "SwiftWhisper", package: "SwiftWhisper")
             ],
-            path: "Sources/WhisperTalk",
+            path: "Sources/LookMaNoHands",
             resources: [
                 .copy("Resources")
             ],
@@ -37,8 +37,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "WhisperTalkTests",
-            dependencies: ["WhisperTalk"]
+            name: "LookMaNoHandsTests",
+            dependencies: ["LookMaNoHands"]
         )
     ]
 )

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Settings window for configuring WhisperTalk
+/// Settings window for configuring Look Ma No Hands
 struct SettingsView: View {
     @ObservedObject private var settings = Settings.shared
     
@@ -164,7 +164,7 @@ struct SettingsView: View {
                 .font(.system(size: 64))
                 .foregroundColor(.accentColor)
             
-            Text("WhisperTalk")
+            Text("Look Ma No Hands")
                 .font(.title)
                 .fontWeight(.bold)
             

@@ -1,4 +1,4 @@
-# WhisperTalk
+# Look Ma No Hands
 
 Fast, local voice dictation for macOS. Press Caps Lock, speak, and get perfectly formatted text—instantly.
 
@@ -18,8 +18,8 @@ Fast, local voice dictation for macOS. Press Caps Lock, speak, and get perfectly
 
 ```bash
 # Clone the repository
-git clone https://github.com/qaid/whispertalk.git
-cd whispertalk
+git clone https://github.com/qaid/lookmanohands.git
+cd lookmanohands
 
 # Build
 swift build -c release
@@ -41,12 +41,12 @@ unzip ggml-tiny-encoder.mlmodelc.zip
 rm ggml-tiny-encoder.mlmodelc.zip
 ```
 
-Alternatively, WhisperTalk can download models for you on first launch.
+Alternatively, Look Ma No Hands can download models for you on first launch.
 
 ### 3. Run
 
 ```bash
-.build/release/WhisperTalk
+.build/release/LookMaNoHands
 ```
 
 ### 4. Grant Permissions
@@ -106,7 +106,7 @@ Click the menu bar icon to:
 - Requires macOS 12+ and Apple Silicon for best performance
 
 **Text not inserting?**
-- Some apps restrict accessibility—WhisperTalk falls back to clipboard
+- Some apps restrict accessibility—Look Ma No Hands falls back to clipboard
 - Check Accessibility permissions in System Settings
 
 **Caps Lock not working?**
@@ -116,8 +116,8 @@ Click the menu bar icon to:
 ## 📚 Project Structure
 
 ```
-WhisperTalk/
-├── Sources/WhisperTalk/
+LookMaNoHands/
+├── Sources/LookMaNoHands/
 │   ├── App/              # Main app and menu bar
 │   ├── Services/         # Core functionality
 │   │   ├── AudioRecorder.swift       # 16kHz audio capture + normalization
@@ -133,7 +133,7 @@ WhisperTalk/
 
 ## 🔒 Privacy
 
-WhisperTalk is 100% local:
+Look Ma No Hands is 100% local:
 - ✅ Audio never sent to cloud
 - ✅ No telemetry or analytics
 - ✅ No internet required (after model download)

@@ -30,7 +30,7 @@ class WhisperService {
             Bundle.main.resourcePath.map { "\($0)/whisper-model/\(modelFileName)" },
             // Application Support
             FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)
-                .first.map { "\($0.path)/WhisperTalk/models/\(modelFileName)" },
+                .first.map { "\($0.path)/LookMaNoHands/models/\(modelFileName)" },
             // Home directory (for development)
             NSHomeDirectory() + "/.whisper/models/\(modelFileName)"
         ].compactMap { $0 }

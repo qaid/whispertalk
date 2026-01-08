@@ -47,7 +47,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Start keyboard monitoring
         setupKeyboardMonitoring()
 
-        print("WhisperTalk launched successfully")
+        print("Look Ma No Hands launched successfully")
     }
     
     // MARK: - Menu Bar Setup
@@ -58,7 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         if let button = statusItem?.button {
             // Use system microphone icon
-            button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "WhisperTalk")
+            button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "Look Ma No Hands")
             button.action = #selector(togglePopover)
             button.target = self
         }
@@ -118,7 +118,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Quit
         menu.addItem(NSMenuItem(
-            title: "Quit WhisperTalk",
+            title: "Quit Look Ma No Hands",
             action: #selector(NSApplication.terminate(_:)),
             keyEquivalent: "q"
         ))
@@ -175,7 +175,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if !granted {
                     self?.showAlert(
                         title: "Microphone Permission Required",
-                        message: "WhisperTalk needs microphone access to record audio. Please grant permission in System Settings > Privacy & Security > Microphone."
+                        message: "Look Ma No Hands needs microphone access to record audio. Please grant permission in System Settings > Privacy & Security > Microphone."
                     )
                 }
             }
@@ -211,7 +211,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Open System Preferences to Accessibility pane
         let alert = NSAlert()
         alert.messageText = "Accessibility Permission Required"
-        alert.informativeText = "WhisperTalk needs Accessibility permission to insert text into other applications.\n\nClick 'Open System Preferences' and add WhisperTalk to the allowed apps."
+        alert.informativeText = "Look Ma No Hands needs Accessibility permission to insert text into other applications.\n\nClick 'Open System Preferences' and add Look Ma No Hands to the allowed apps."
         alert.alertStyle = .warning
         alert.addButton(withTitle: "Open System Preferences")
         alert.addButton(withTitle: "Later")
@@ -282,7 +282,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         await MainActor.run {
             let alert = NSAlert()
             alert.messageText = "Whisper Model Required"
-            alert.informativeText = "WhisperTalk needs a Whisper model to transcribe audio. Would you like to download one now?\n\nRecommended: 'tiny' model (75 MB) - fastest transcription for dictation."
+            alert.informativeText = "Look Ma No Hands needs a Whisper model to transcribe audio. Would you like to download one now?\n\nRecommended: 'tiny' model (75 MB) - fastest transcription for dictation."
             alert.alertStyle = .informational
             alert.addButton(withTitle: "Download Tiny Model (Recommended)")
             alert.addButton(withTitle: "Choose Model...")
@@ -484,7 +484,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.image = NSImage(systemSymbolName: "mic.circle.fill", accessibilityDescription: "Recording")
             // Could also change the color here using button.contentTintColor
         } else {
-            button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "WhisperTalk")
+            button.image = NSImage(systemSymbolName: "mic.fill", accessibilityDescription: "Look Ma No Hands")
         }
     }
 }

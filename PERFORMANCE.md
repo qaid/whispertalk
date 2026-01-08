@@ -1,6 +1,6 @@
 # Performance Optimization Guide
 
-This guide explains how to achieve the fastest possible transcription speeds with WhisperTalk.
+This guide explains how to achieve the fastest possible transcription speeds with Look Ma No Hands.
 
 ## Quick Start: Download Tiny Model with Core ML
 
@@ -36,7 +36,7 @@ Core ML enables GPU acceleration on Apple Silicon Macs:
 
 ## Verification
 
-When you run WhisperTalk, look for this in the console:
+When you run Look Ma No Hands, look for this in the console:
 
 ```
 ✅ GOOD: Core ML loaded successfully
@@ -62,7 +62,7 @@ If you see the failure message, Core ML isn't being used (CPU only).
 
 ## Download via App
 
-WhisperTalk can download models for you:
+Look Ma No Hands can download models for you:
 1. Launch the app
 2. Click the menu bar icon
 3. You'll be prompted to download a model
