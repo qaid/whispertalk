@@ -4,7 +4,9 @@ This file provides context for Claude Code sessions working on this project.
 
 ## Project Overview
 
-**Look Ma No Hands** is a macOS application that provides system-wide voice dictation with local AI transcription. Users press Caps Lock to toggle recording, speak, and the transcribed + formatted text is inserted into any active input field.
+**Look Ma No Hands** is a macOS application that provides:
+1. **System-wide voice dictation** - Press Caps Lock to toggle recording, speak, and the transcribed + formatted text is inserted into any active input field
+2. **Meeting transcription** (planned) - Record system audio during video calls and produce structured, actionable meeting notes
 
 ## Core Requirements
 
@@ -25,9 +27,10 @@ This file provides context for Claude Code sessions working on this project.
 | Language | Swift | Required for macOS system integration |
 | UI Framework | SwiftUI | Modern, declarative UI |
 | Build System | Swift Package Manager | No Xcode required |
-| Whisper Engine | whisper.cpp | C++ library with Swift bindings |
-| Smart Formatting | Ollama | Local LLM via HTTP API at localhost:11434 |
+| Whisper Engine | whisper.cpp via SwiftWhisper | C++ library with Swift bindings |
+| Smart Formatting | Rule-based | Capitalization and punctuation (LLM support planned) |
 | Audio | AVFoundation | Apple's native audio framework |
+| System Audio Capture | ScreenCaptureKit (planned) | For meeting transcription mode |
 
 ## Key Technical Decisions
 
@@ -37,11 +40,11 @@ This file provides context for Claude Code sessions working on this project.
    - `NSStatusBar` for menu bar presence
    - `NSWindow` for floating indicator
 
-2. **Ollama for local LLM** because:
-   - Easy to set up and test during development
-   - User can choose different models
-   - Well-maintained ecosystem
-   - Can migrate to embedded llama.cpp later if desired
+2. **Rule-based formatting first, LLM optional** because:
+   - Fast and deterministic for basic dictation
+   - No external dependencies
+   - Can add Ollama integration later for advanced formatting
+   - Privacy-focused (no data processing overhead)
 
 3. **Caps Lock with fallback** because:
    - User's preferred trigger key
@@ -51,65 +54,110 @@ This file provides context for Claude Code sessions working on this project.
 ## Project Structure
 
 ```
-WhisperDictation/
+LookMaNoHands/
 ├── CLAUDE.md                     # This file - Claude Code context
 ├── Package.swift                 # Swift Package Manager config
 ├── README.md                     # User-facing documentation
-├── docs/
-│   ├── ARCHITECTURE.md           # Technical architecture details
-│   ├── DECISIONS.md              # Decision log with rationale
-│   └── ROADMAP.md                # Implementation phases
+├── PERFORMANCE.md                # Core ML optimization guide
+├── deploy.sh                     # Automated build and deployment script
+├── Resources/
+│   └── AppIcon.icns              # App icon
 ├── Sources/
-│   └── WhisperDictation/
+│   └── LookMaNoHands/
 │       ├── App/
-│       │   ├── WhisperDictationApp.swift    # Main app entry
-│       │   └── AppDelegate.swift            # Menu bar setup
+│       │   ├── LookMaNoHandsApp.swift    # Main app entry
+│       │   └── AppDelegate.swift         # Menu bar setup and coordination
 │       ├── Views/
-│       │   ├── MenuBarView.swift            # Menu bar interface
-│       │   ├── RecordingIndicator.swift     # Floating indicator
-│       │   └── SettingsView.swift           # Settings window
+│       │   ├── RecordingIndicator.swift  # Floating indicator window
+│       │   └── SettingsView.swift        # Settings window (permissions, models, about)
 │       ├── Services/
-│       │   ├── KeyboardMonitor.swift        # Caps Lock detection
-│       │   ├── AudioRecorder.swift          # Microphone capture
-│       │   ├── WhisperService.swift         # Transcription
-│       │   ├── OllamaService.swift          # Local LLM formatting
-│       │   └── TextInsertionService.swift   # Paste into apps
+│       │   ├── KeyboardMonitor.swift         # Caps Lock detection
+│       │   ├── AudioRecorder.swift           # Microphone capture
+│       │   ├── WhisperService.swift          # Whisper transcription
+│       │   ├── TextFormatter.swift           # Rule-based formatting
+│       │   └── TextInsertionService.swift    # Paste into apps
 │       ├── Models/
-│       │   ├── TranscriptionState.swift     # App state
-│       │   └── Settings.swift               # User preferences
+│       │   └── AppState.swift                # App state management
 │       └── Resources/
-│           └── whisper-model/               # Whisper model files
+│           └── (model files downloaded to ~/.whisper/models/)
 ```
 
 ## Implementation Phases
 
-### Phase 1: Foundation
-- [ ] Project setup with Swift Package Manager
-- [ ] Basic menu bar app shell
-- [ ] Microphone permission request
-- [ ] Accessibility permission request
-- [ ] Ollama availability check
+### Phase 1: Foundation ✅ COMPLETED
+- [x] Project setup with Swift Package Manager
+- [x] Basic menu bar app shell
+- [x] Microphone permission request
+- [x] Accessibility permission request
+- [x] Custom app icon integration
 
-### Phase 2: Core Recording
-- [ ] Keyboard monitoring (Caps Lock detection)
-- [ ] Audio capture from microphone
-- [ ] Floating recording indicator window
+### Phase 2: Core Recording ✅ COMPLETED
+- [x] Keyboard monitoring (Caps Lock detection)
+- [x] Audio capture from microphone
+- [x] Floating recording indicator window
+- [x] Menu bar recording toggle
 
-### Phase 3: Transcription
-- [ ] Integrate whisper.cpp library
-- [ ] Download/bundle Whisper model
-- [ ] Audio-to-text pipeline
-- [ ] Basic text insertion via clipboard
+### Phase 3: Transcription ✅ COMPLETED
+- [x] Integrate whisper.cpp library via SwiftWhisper
+- [x] Model download system (tiny model with Core ML)
+- [x] Audio-to-text pipeline with Core ML acceleration
+- [x] Text insertion via Accessibility APIs
 
-### Phase 4: Smart Formatting
-- [ ] Ollama HTTP client
-- [ ] Formatting prompt design
-- [ ] Context-aware text transformation
+### Phase 4: Smart Formatting ✅ COMPLETED (Basic)
+- [x] Rule-based capitalization and punctuation
+- [ ] Optional Ollama integration for advanced formatting (future)
 
-### Phase 5: Polish
-- [ ] Settings window UI
-- [ ] Error handling and user feedback
-- [ ] Performance optimization
+### Phase 5: Polish ✅ COMPLETED
+- [x] Settings window UI (permissions, models, about tabs)
+- [x] Real-time permission status checking
+- [x] Performance optimization (Core ML, tiny model)
+- [x] Automated deployment script (deploy.sh)
+- [x] Documentation (README, PERFORMANCE, CLAUDE)
+
+---
+
+## Future Phases: Meeting Transcription Mode
+
+### Phase 6: System Audio Capture (Planned)
+- [ ] Integrate ScreenCaptureKit for system audio recording
+- [ ] Request screen recording permission
+- [ ] Add audio source selection (microphone vs system audio vs both)
+- [ ] Detect active video call applications (Zoom, Meet, Teams)
+- [ ] Create "Meeting Mode" toggle in UI
+
+### Phase 7: Long-Form Transcription (Planned)
+- [ ] Implement streaming transcription for long recordings
+- [ ] Handle audio chunking for continuous transcription
+- [ ] Real-time display of transcription in progress
+- [ ] Save raw transcript to file (markdown format)
+
+### Phase 8: Meeting Note Structuring (Planned)
+- [ ] Integrate Ollama for post-processing transcripts
+- [ ] Design prompts for extracting:
+  - Meeting participants (speaker diarization)
+  - Key discussion topics
+  - Action items and owners
+  - Decisions made
+  - Questions raised
+- [ ] Create structured markdown output template
+- [ ] Add export options (markdown, PDF, plain text)
+
+### Phase 9: Meeting Mode UX (Planned)
+- [ ] Dedicated "Meeting Mode" window with:
+  - Start/stop recording controls
+  - Real-time transcription display
+  - Meeting duration timer
+  - Audio level indicators
+- [ ] Save meeting notes to ~/Documents/LookMaNoHands/Meetings/
+- [ ] Meeting history browser in Settings
+- [ ] Search across past meeting notes
+
+### Phase 10: Advanced Features (Future)
+- [ ] Speaker identification and labeling
+- [ ] Integration with calendar for automatic meeting context
+- [ ] Custom formatting templates for different meeting types
+- [ ] Automatic highlight detection (important moments)
+- [ ] Meeting summary email generation
 
 ## Development Guidelines
 
@@ -122,29 +170,43 @@ WhisperDictation/
 ## Commands
 
 ```bash
-# Build the project
-swift build
+# Build and deploy (recommended during development)
+./deploy.sh
 
-# Run the app
-swift run WhisperDictation
-
-# Build for release
+# Manual build for release
 swift build -c release
+
+# Run from source (for debugging)
+swift run LookMaNoHands
+
+# Launch production app
+open ~/Applications/LookMaNoHands.app
 ```
 
 ## Required System Permissions
 
-The app needs these permissions (requested at runtime):
-1. **Microphone Access** - to capture audio
-2. **Accessibility Access** - to monitor keyboard and insert text
+### Current (Dictation Mode)
+1. **Microphone Access** - to capture audio for dictation
+2. **Accessibility Access** - to monitor keyboard (Caps Lock) and insert text
 
-## Dependencies to Research/Add
+### Future (Meeting Mode)
+3. **Screen Recording** - required by macOS to capture system audio via ScreenCaptureKit
 
-- whisper.cpp Swift bindings or C interop
-- HTTP client for Ollama communication (URLSession or similar)
+## Current Dependencies
+
+- **SwiftWhisper** (1.0.0+) - Swift wrapper for whisper.cpp with Core ML support
+- **whisper.cpp** - Bundled within SwiftWhisper, provides local transcription
+- **Core ML models** - ggml-tiny-encoder.mlmodelc for Neural Engine acceleration
+
+## Future Dependencies (Meeting Mode)
+
+- **Ollama** (optional) - Local LLM for advanced meeting note structuring
+  - HTTP client via URLSession
+  - API endpoint: http://localhost:11434/api/generate
 
 ## Useful Resources
 
 - whisper.cpp: https://github.com/ggerganov/whisper.cpp
+- SwiftWhisper: https://github.com/exPHAT/SwiftWhisper
 - Ollama: https://ollama.ai
-- Ollama API: http://localhost:11434/api/generate
+- ScreenCaptureKit: https://developer.apple.com/documentation/screencapturekit
