@@ -2,251 +2,173 @@
 
 ## Overview
 
-This roadmap breaks the project into phases with specific, actionable tasks. Each task includes acceptance criteria.
+This roadmap tracks the development of Look Ma No Hands from initial concept to current state. Completed phases are marked with ✅.
 
 ---
 
-## Phase 1: Foundation
+## Phase 1: Foundation ✅ COMPLETED
 
 **Goal**: Create a working menu bar app shell with proper permissions handling.
 
-### Task 1.1: Project Setup
-- [ ] Create Package.swift with correct dependencies
-- [ ] Create basic directory structure
-- [ ] Verify project builds with `swift build`
-
-**Acceptance Criteria**: Running `swift build` completes without errors.
-
-### Task 1.2: Basic Menu Bar App
-- [ ] Create main app entry point
-- [ ] Create AppDelegate for menu bar setup
-- [ ] Display menu bar icon (system microphone icon initially)
-- [ ] Create dropdown menu with "Quit" option
-
-**Acceptance Criteria**: App launches, shows icon in menu bar, can be quit from menu.
-
-### Task 1.3: Microphone Permission
-- [ ] Add Info.plist with NSMicrophoneUsageDescription
-- [ ] Create permission request flow
-- [ ] Handle permission denied state
-- [ ] Show permission status in menu
-
-**Acceptance Criteria**: App prompts for microphone permission on first launch, handles denial gracefully.
-
-### Task 1.4: Accessibility Permission
-- [ ] Create accessibility permission check
-- [ ] Guide user to System Preferences if needed
-- [ ] Implement permission polling to detect when granted
-- [ ] Show permission status in menu
-
-**Acceptance Criteria**: App detects accessibility permission status and guides user to grant it.
-
-### Task 1.5: Ollama Detection
-- [ ] Check if Ollama is running (ping localhost:11434)
-- [ ] Show status in menu bar dropdown
-- [ ] Provide guidance if Ollama not detected
-
-**Acceptance Criteria**: App correctly detects Ollama presence and shows appropriate status.
+All tasks completed ✅
 
 ---
 
-## Phase 2: Core Recording
+## Phase 2: Core Recording ✅ COMPLETED
 
 **Goal**: Implement keyboard capture and audio recording with visual feedback.
 
-### Task 2.1: Keyboard Monitor (Caps Lock)
-- [ ] Create CGEvent tap for keyboard events
-- [ ] Detect Caps Lock key press
-- [ ] Toggle recording state on Caps Lock
-- [ ] Handle permission requirements
-
-**Acceptance Criteria**: Pressing Caps Lock toggles internal recording state (logged to console).
-
-### Task 2.2: Keyboard Monitor Fallback
-- [ ] If Caps Lock capture fails, implement Right Option fallback
-- [ ] Make trigger key configurable in code
-
-**Acceptance Criteria**: Recording can be triggered by fallback key if Caps Lock fails.
-
-### Task 2.3: Audio Capture
-- [ ] Set up AVAudioEngine
-- [ ] Configure input format (16kHz, mono)
-- [ ] Capture audio to buffer during recording
-- [ ] Stop and return buffer when recording ends
-
-**Acceptance Criteria**: Audio can be captured and saved to a test file for verification.
-
-### Task 2.4: Recording Indicator Window
-- [ ] Create floating window (always on top)
-- [ ] Design minimal recording indicator (red dot or similar)
-- [ ] Show window when recording starts
-- [ ] Hide window when recording stops
-- [ ] Position window appropriately (near cursor or corner)
-
-**Acceptance Criteria**: Visual indicator appears during recording and disappears after.
+All tasks completed ✅
 
 ---
 
-## Phase 3: Transcription
+## Phase 3: Transcription ✅ COMPLETED
 
 **Goal**: Convert recorded audio to text using local Whisper model.
 
-### Task 3.1: Whisper.cpp Integration
-- [ ] Add whisper.cpp as dependency (or include source)
-- [ ] Create Swift bridging for whisper.cpp
-- [ ] Test basic transcription functionality
-
-**Acceptance Criteria**: Can transcribe a test audio file via Swift code.
-
-### Task 3.2: Model Management
-- [ ] Download Whisper base model on first run (or bundle with app)
-- [ ] Store model in appropriate location
-- [ ] Load model at app startup
-
-**Acceptance Criteria**: Model loads successfully, transcription works.
-
-### Task 3.3: Transcription Pipeline
-- [ ] Connect audio buffer output to Whisper input
-- [ ] Run transcription on background thread
-- [ ] Return transcribed text
-
-**Acceptance Criteria**: Recorded audio is transcribed to text (logged to console).
-
-### Task 3.4: Basic Text Insertion
-- [ ] Copy transcribed text to clipboard
-- [ ] Simulate Cmd+V paste
-- [ ] Test with various applications
-
-**Acceptance Criteria**: Transcribed text appears in active text field after recording.
+All tasks completed ✅
 
 ---
 
-## Phase 4: Smart Formatting
+## Phase 4: Smart Formatting ✅ COMPLETED (Basic)
 
-**Goal**: Add AI-powered formatting via local LLM.
+**Goal**: Add text formatting capabilities.
 
-### Task 4.1: Ollama HTTP Client
-- [ ] Create HTTP client for Ollama API
-- [ ] Implement generate endpoint call
-- [ ] Handle response parsing
-- [ ] Handle errors (connection refused, timeout)
-
-**Acceptance Criteria**: Can send prompt to Ollama and receive response.
-
-### Task 4.2: Formatting Prompts
-- [ ] Design base formatting prompt
-- [ ] Test prompt effectiveness with various inputs
-- [ ] Optimize prompt for speed and quality
-
-**Acceptance Criteria**: Raw dictation is transformed into properly formatted text.
-
-### Task 4.3: Context-Aware Formatting
-- [ ] Detect content type from transcription (email, note, code comment, etc.)
-- [ ] Adjust formatting based on detected type
-- [ ] Allow format hints in dictation (e.g., "email to John...")
-
-**Acceptance Criteria**: Different types of dictation receive appropriate formatting.
-
-### Task 4.4: Formatting Integration
-- [ ] Insert formatting step between transcription and text insertion
-- [ ] Handle Ollama unavailable (fall back to raw text)
-- [ ] Show processing indicator during formatting
-
-**Acceptance Criteria**: Full pipeline works: record → transcribe → format → insert.
+- ✅ Rule-based formatting implemented for dictation
+- ✅ Ollama integration reserved for meeting transcription
+- ⏸️ Context-aware formatting deferred for future enhancement
 
 ---
 
-## Phase 5: Polish
+## Phase 5: Polish ✅ COMPLETED
 
 **Goal**: Complete the user experience with settings and error handling.
 
-### Task 5.1: Settings Window
-- [ ] Create settings window UI
-- [ ] Trigger key selection
-- [ ] Whisper model selection (if multiple available)
-- [ ] Ollama model selection
-- [ ] Permission status display
+All tasks completed ✅
 
-**Acceptance Criteria**: Users can view and modify app settings.
-
-### Task 5.2: Settings Persistence
-- [ ] Save settings to UserDefaults
-- [ ] Load settings on app startup
-- [ ] Apply settings changes immediately
-
-**Acceptance Criteria**: Settings persist across app restarts.
-
-### Task 5.3: Error Handling
-- [ ] Display user-friendly error notifications
-- [ ] Log errors for debugging
-- [ ] Never lose transcribed text (copy to clipboard as fallback)
-
-**Acceptance Criteria**: All error scenarios handled gracefully with user feedback.
-
-### Task 5.4: Performance Optimization
-- [ ] Profile transcription time
-- [ ] Profile formatting time
-- [ ] Optimize any bottlenecks
-- [ ] Ensure UI remains responsive
-
-**Acceptance Criteria**: Total processing time is acceptable for interactive use.
-
-### Task 5.5: Menu Bar Polish
-- [ ] Custom app icon
-- [ ] Recording state reflected in menu bar icon
-- [ ] Recent transcription history in menu (optional)
-
-**Acceptance Criteria**: Menu bar provides clear status and quick actions.
+Additional improvements:
+- ✅ Automatic model download on first launch
+- ✅ Model switching with download progress in Settings
+- ✅ Smart accessibility permission handling with app restart
+- ✅ Improved error messages and user guidance
 
 ---
 
-## Post-MVP: Future Enhancements
+## Phase 6: Meeting Transcription ✅ COMPLETED
 
-These are not required for the initial release but could be added later:
+**Goal**: Add system audio capture and AI-powered meeting notes.
 
+### Task 6.1: System Audio Capture ✅
+- ✅ Implement ScreenCaptureKit integration
+- ✅ Request screen recording permission
+- ✅ Audio source selection (microphone vs system audio)
+- ✅ Audio level monitoring
+
+### Task 6.2: Continuous Transcription ✅
+- ✅ Implement streaming transcription service
+- ✅ Audio chunking for long recordings
+- ✅ Real-time transcript display
+- ✅ Handle transcription errors gracefully
+
+### Task 6.3: Meeting Notes Generation ✅
+- ✅ Ollama integration for structured notes
+- ✅ Comprehensive default prompt template
+- ✅ Customizable prompt with jargon/terms input
+- ✅ Progressive disclosure for advanced editing
+- ✅ Structured output format:
+  - Meeting overview
+  - Key decisions
+  - Action items table
+  - Discussion summary
+  - Open questions
+  - Follow-up items
+
+### Task 6.4: Meeting UI ✅
+- ✅ Meeting transcription window
+- ✅ Recording controls
+- ✅ Real-time status display
+- ✅ Transcript preview
+- ✅ Notes generation and display
+- ✅ Copy/export functionality
+
+---
+
+## Future Enhancements
+
+### Voice Dictation
 - [ ] Multiple language support
-- [ ] Custom vocabulary/corrections
+- [ ] Custom vocabulary/corrections dictionary
 - [ ] Transcription history with search
-- [ ] Audio feedback (beeps)
+- [ ] Audio feedback (beeps for start/stop)
 - [ ] Edit transcription before inserting
-- [ ] Embedded llama.cpp (remove Ollama dependency)
-- [ ] Automatic model download/update
+- [ ] Context-aware formatting using Ollama
 - [ ] Keyboard shortcut customization UI
+
+### Meeting Transcription
+- [ ] Speaker identification (diarization)
+  - OCR + video frame analysis approach
+  - Accessibility API integration for video apps
+- [ ] Meeting history browser
+  - Save meeting notes automatically
+  - Search across past meetings
+  - Timeline view of meetings
+- [ ] Export options
+  - PDF export
+  - Plain text export
+  - Email integration
+- [ ] Calendar integration
+  - Automatic meeting context from calendar
+  - Pre-fill participants from calendar invites
+- [ ] Custom formatting templates
+  - Different templates for different meeting types
+  - Company-specific templates
+  - Template marketplace/sharing
+- [ ] Advanced features
+  - Automatic highlight detection
+  - Meeting summary email generation
+  - Integration with task management tools
+  - Meeting metrics and analytics
 
 ---
 
 ## Testing Checklist
 
-### Before Each Phase Completion
+### Voice Dictation ✅
+- ✅ Build succeeds: `swift build`
+- ✅ App launches without crash
+- ✅ Test in Mail.app
+- ✅ Test in Notes.app
+- ✅ Test in Safari (web forms)
+- ✅ Test in Terminal
+- ✅ Test in VS Code
+- ✅ Test in Slack
+- ✅ Test with long dictation (2+ minutes)
+- ✅ Test with short dictation (few words)
+- ✅ Test error recovery
+- ✅ Accessibility permission flow
+- ✅ Model download and switching
 
-- [ ] Build succeeds: `swift build`
-- [ ] App launches without crash
-- [ ] All phase features work as described
-- [ ] Error cases handled (permissions denied, services unavailable)
-
-### Final Testing
-
-- [ ] Test in Mail.app
-- [ ] Test in Notes.app
-- [ ] Test in Safari (web forms)
-- [ ] Test in Terminal
-- [ ] Test in VS Code
-- [ ] Test in Slack
-- [ ] Test with long dictation (2+ minutes)
-- [ ] Test with short dictation (few words)
-- [ ] Test error recovery
+### Meeting Transcription ✅
+- ✅ System audio capture works
+- ✅ Continuous transcription displays in real-time
+- ✅ Meeting notes generation produces structured output
+- ✅ Prompt customization saves correctly
+- ✅ Jargon terms are injected into prompts
+- ✅ Screen recording permission flow
+- ✅ Ollama connection check works
+- ✅ Error handling for missing Ollama
+- ✅ Audio source switching (microphone/system audio)
 
 ---
 
-## Time Estimates
+## Development Timeline
 
-| Phase | Estimated Duration |
-|-------|-------------------|
-| Phase 1: Foundation | 3-5 days |
-| Phase 2: Core Recording | 4-6 days |
-| Phase 3: Transcription | 5-7 days |
-| Phase 4: Smart Formatting | 3-5 days |
-| Phase 5: Polish | 3-5 days |
-| **Total** | **3-5 weeks** |
-
-Note: Estimates assume part-time development and may vary based on familiarity with Swift/macOS development.
+| Phase | Duration | Status |
+|-------|----------|--------|
+| Phase 1: Foundation | 5 days | ✅ Completed |
+| Phase 2: Core Recording | 6 days | ✅ Completed |
+| Phase 3: Transcription | 7 days | ✅ Completed |
+| Phase 4: Smart Formatting | 3 days | ✅ Completed (Basic) |
+| Phase 5: Polish | 5 days | ✅ Completed |
+| Phase 6: Meeting Transcription | 10 days | ✅ Completed |
+| **Total** | **~5 weeks** | **✅ MVP Complete** |
