@@ -92,9 +92,27 @@ struct SettingsView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
-            
+
+            Section("Setup") {
+                Button("Run Setup Wizard Again") {
+                    // Reset onboarding flag and show restart alert
+                    settings.hasCompletedOnboarding = false
+
+                    let alert = NSAlert()
+                    alert.messageText = "Restart Required"
+                    alert.informativeText = "Please restart Look Ma No Hands to run the setup wizard again."
+                    alert.alertStyle = .informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                }
+
+                Text("Re-run the initial setup wizard to reconfigure Ollama, models, and permissions")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
             Spacer()
-            
+
             HStack {
                 Spacer()
                 Button("Reset to Defaults") {

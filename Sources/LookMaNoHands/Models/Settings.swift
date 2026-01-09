@@ -121,6 +121,7 @@ If a follow-up meeting or next steps were discussed, describe them here. If not 
         static let whisperModel = "whisperModel"
         static let ollamaModel = "ollamaModel"
         static let meetingPrompt = "meetingPrompt"
+        static let hasCompletedOnboarding = "hasCompletedOnboarding"
         // Note: enableFormatting removed - formatting is always enabled for dictation
         // Ollama integration reserved for future meeting transcription feature
         static let showIndicator = "showIndicator"
@@ -171,6 +172,13 @@ If a follow-up meeting or next steps were discussed, describe them here. If not 
         }
     }
 
+    /// Whether the user has completed the onboarding wizard
+    @Published var hasCompletedOnboarding: Bool {
+        didSet {
+            UserDefaults.standard.set(hasCompletedOnboarding, forKey: Keys.hasCompletedOnboarding)
+        }
+    }
+
     // MARK: - Initialization
     
     private init() {
@@ -205,6 +213,13 @@ If a follow-up meeting or next steps were discussed, describe them here. If not 
             self.indicatorPosition = position
         } else {
             self.indicatorPosition = .top
+        }
+
+        // Onboarding completion defaults to false for new users
+        if UserDefaults.standard.object(forKey: Keys.hasCompletedOnboarding) != nil {
+            self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: Keys.hasCompletedOnboarding)
+        } else {
+            self.hasCompletedOnboarding = false
         }
     }
     

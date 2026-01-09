@@ -11,6 +11,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var recordingMenuItem: NSMenuItem?
     private var settingsWindow: NSWindow?
     private var meetingWindow: NSWindow?
+    private var onboardingWindow: NSWindow?
 
     // Popover for menu bar content (alternative to dropdown menu)
     private var popover: NSPopover?
@@ -51,22 +52,63 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         setupMenuBar()
         NSLog("✅ AppDelegate: Menu bar setup complete")
 
-        // Check permissions on launch
+        // Check if first launch
+        if !Settings.shared.hasCompletedOnboarding {
+            NSLog("🆕 First launch detected - showing onboarding")
+            showOnboarding()
+            return  // Skip rest of initialization until onboarding completes
+        }
+
+        // Normal initialization for returning users
+        completeInitialization()
+    }
+
+    // MARK: - Onboarding
+
+    private func showOnboarding() {
+        let onboardingView = OnboardingView(
+            whisperService: whisperService,
+            ollamaService: ollamaService,
+            onComplete: {
+                // Called when user clicks "Finish"
+                self.onboardingWindow?.close()
+                self.onboardingWindow = nil
+
+                // Check if accessibility was granted during onboarding
+                if AXIsProcessTrusted() {
+                    // Restart app to activate accessibility monitoring
+                    NSLog("🔄 Accessibility granted - restarting app")
+                    self.restartApp()
+                } else {
+                    // Continue with normal initialization
+                    self.completeInitialization()
+                }
+            }
+        )
+
+        let hostingController = NSHostingController(rootView: onboardingView)
+
+        let window = NSWindow(contentViewController: hostingController)
+        window.title = "Welcome to Look Ma No Hands"
+        window.styleMask = [.titled, .closable]
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        window.isReleasedWhenClosed = false
+
+        self.onboardingWindow = window
+    }
+
+    private func completeInitialization() {
         checkPermissions()
         NSLog("✅ AppDelegate: Permissions checked")
 
-        // Load Whisper model
         loadWhisperModel()
         NSLog("✅ AppDelegate: Whisper model load initiated")
 
-        // Optional: Check if Ollama is available (for advanced AI formatting)
-        // checkOllamaStatus()
-
-        // Start keyboard monitoring
         setupKeyboardMonitoring()
         NSLog("✅ AppDelegate: Keyboard monitoring setup complete")
 
-        NSLog("🎉 Look Ma No Hands launched successfully")
+        NSLog("🎉 Look Ma No Hands initialization complete")
     }
 
     // MARK: - URL Scheme Handling
