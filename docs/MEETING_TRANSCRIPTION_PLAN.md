@@ -21,80 +21,76 @@ This document outlines the implementation plan for adding meeting transcription 
 
 ---
 
-## Proposed Implementation Phases
+## Implementation Phases
 
-### Phase 1: System Audio Capture
+### Phase 1: System Audio Capture ✅ COMPLETED
 
-**Files to create:**
-- `Sources/LookMaNoHands/Services/SystemAudioRecorder.swift`
+**Files created:**
+- ✅ `Sources/LookMaNoHands/Services/SystemAudioRecorder.swift`
 
-**Tasks:**
-- Use ScreenCaptureKit to capture system audio
-- Request screen recording permission (required)
-- Stream audio to ring buffer
+**Tasks completed:**
+- ✅ Use ScreenCaptureKit to capture system audio
+- ✅ Request screen recording permission (required)
+- ✅ Stream audio to ring buffer
+- ✅ Audio source selection (microphone vs system audio)
 
-**Files to modify:**
-- `Sources/LookMaNoHands/Models/TranscriptionState.swift`
-  - Add recording source state (internal mic vs system audio)
-
----
-
-### Phase 2: Continuous Transcription Engine
-
-**Files to create:**
-- `Sources/LookMaNoHands/Services/ContinuousTranscriber.swift`
-
-**Tasks:**
-- Maintain transcript buffer with timestamps
-- Process audio in 30-second overlapping windows
-- Handle silence detection to optimize processing
-
-**Design pattern:**
-```
-[audio stream] → [30s chunks with 5s overlap] → [Whisper] → [segment status
-                                                              "Processing..."]
-```
+**Files modified:**
+- ✅ `Sources/LookMaNoHands/Models/TranscriptionState.swift`
+  - Added recording source state (internal mic vs system audio)
+  - Added audio source enum and state tracking
 
 ---
 
-### Phase 3: Meeting UI
+### Phase 2: Continuous Transcription Engine ✅ COMPLETED
 
-**Files to create:**
-- `Sources/LookMaNoHands/Views/MeetingView.swift`
+**Files created:**
+- ✅ `Sources/LookMaNoHands/Services/ContinuousTranscriber.swift`
 
-**Tasks:**
-- Live transcript display (scrolling text)
-- Timer, recording indicator
-- Start/Stop controls
-- "Processing..." status for post-meeting analysis
-
-**Files to modify:**
-- `Sources/LookMaNoHands/App/AppDelegate.swift`
-  - Add menu item: "Start Meeting Transcription"
+**Tasks completed:**
+- ✅ Maintain transcript buffer with timestamps
+- ✅ Process audio in chunks with real-time transcription
+- ✅ Handle silence detection to optimize processing
+- ✅ Real-time status updates during transcription
 
 ---
 
-### Phase 4: Structured Notes Generation
+### Phase 3: Meeting UI ✅ COMPLETED
 
-**Files to create:**
-- `Sources/LookMaNoHands/Services/MeetingAnalyzer.swift`
+**Files created:**
+- ✅ `Sources/LookMaNoHands/Views/MeetingView.swift`
 
-**Tasks:**
-- Send full transcript to Ollama with specialized prompt
-- Extract: Summary, Key Decisions, Action Items, Participants
-- Generate markdown output
+**Tasks completed:**
+- ✅ Live transcript display (scrolling text)
+- ✅ Timer, recording indicator
+- ✅ Start/Stop controls
+- ✅ Audio source picker (microphone/system audio)
+- ✅ "Processing..." status for post-meeting analysis
+- ✅ Prompt customization UI with jargon input
+- ✅ Generated notes display
 
-**Ollama prompt template:**
-```
-Analyze this meeting transcript and extract:
-- Summary (1-3 sentences)
-- Key decisions (bulleted list)
-- Action items (bulleted list)
-- Topics discussed (bulleted list)
+**Files modified:**
+- ✅ `Sources/LookMaNoHands/App/AppDelegate.swift`
+  - Added menu item: "Start Meeting Transcription"
+  - Added meeting window management
 
-Output format:
-[Markdown structure with headings and bullet points]
-```
+---
+
+### Phase 4: Structured Notes Generation ✅ COMPLETED
+
+**Files created:**
+- ✅ `Sources/LookMaNoHands/Services/MeetingAnalyzer.swift`
+
+**Tasks completed:**
+- ✅ Send full transcript to Ollama with specialized prompt
+- ✅ Extract: Summary, Key Decisions, Action Items, Participants
+- ✅ Generate markdown output
+- ✅ Comprehensive default prompt template
+- ✅ Customizable prompt with jargon injection
+
+**Files modified:**
+- ✅ `Sources/LookMaNoHands/Models/Settings.swift`
+  - Added comprehensive default meeting prompt
+  - Added meeting prompt persistence
 
 ---
 
@@ -191,20 +187,18 @@ New settings in SettingsView:
 
 ## Success Metrics
 
-- Successfully capture system audio from Zoom/Meet/Teams
-- Transcribe 1-hour meeting in <5 minutes post-processing
-- Generate structured notes with 90% accuracy (subjective)
-- Files auto-saved without user intervention
-- Real-time structured notes (updated every 30s during meeting)
-- Auto-sync option for teams
-- Cloud sync option (Dropbox, iCloud, etc.)
+- ✅ Successfully capture system audio from Zoom/Meet/Teams
+- ✅ Real-time continuous transcription during meetings
+- ✅ Generate structured notes with Ollama integration
+- ✅ Customizable prompts with domain-specific jargon
+- ✅ Copy/export functionality for generated notes
 
 ---
 
 ## Future Enhancements (Post-MVP)
 
-- Real-time structured notes (updated every 30s during meeting)
+- Formatted notes preview and editing before export
 - Speaker identification with voice profiles
 - Integration with calendar (auto-detect meetings)
-- Auto-sync option for teams
-- Cloud sync option (Dropbox, iCloud, etc.)
+- Automatic meeting notes saving to disk
+- Meeting history browser with search

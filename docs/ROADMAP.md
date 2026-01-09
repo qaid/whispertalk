@@ -101,10 +101,21 @@ Additional improvements:
 - [ ] Transcription history with search
 - [ ] Audio feedback (beeps for start/stop)
 - [ ] Edit transcription before inserting
-- [ ] Context-aware formatting using Ollama
+- [ ] Context-aware formatting
+  - Detect application context (email, notes, code editor, etc.)
+  - Automatically apply appropriate formatting conventions
+  - Email: proper spacing, salutations, signatures
+  - Notes: bullet lists, headers, structured content
+  - Code: proper indentation and syntax awareness
+  - Using Ollama for intelligent context detection and formatting
 - [ ] Keyboard shortcut customization UI
 
 ### Meeting Transcription
+- [ ] Formatted notes preview and editing
+  - View generated notes in a formatted, readable display
+  - Edit notes before copying/exporting
+  - Rich text rendering with proper markdown/formatting
+  - Side-by-side view: raw transcript vs formatted notes
 - [ ] Speaker identification (diarization)
   - OCR + video frame analysis approach
   - Accessibility API integration for video apps
@@ -159,16 +170,3 @@ Additional improvements:
 - ✅ Error handling for missing Ollama
 - ✅ Audio source switching (microphone/system audio)
 
----
-
-## Development Timeline
-
-| Phase | Duration | Status |
-|-------|----------|--------|
-| Phase 1: Foundation | 5 days | ✅ Completed |
-| Phase 2: Core Recording | 6 days | ✅ Completed |
-| Phase 3: Transcription | 7 days | ✅ Completed |
-| Phase 4: Smart Formatting | 3 days | ✅ Completed (Basic) |
-| Phase 5: Polish | 5 days | ✅ Completed |
-| Phase 6: Meeting Transcription | 10 days | ✅ Completed |
-| **Total** | **~5 weeks** | **✅ MVP Complete** |
