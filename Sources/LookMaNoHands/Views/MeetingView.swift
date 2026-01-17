@@ -25,6 +25,8 @@ struct MeetingView: View {
     @State private var customPrompt = Settings.shared.meetingPrompt
     @State private var jargonTerms = ""
     @State private var showAdvancedPrompt = false
+    @State private var showImportFilePicker = false
+    @State private var importedFileName: String?
 
     // Services
     private let mixedAudioRecorder: MixedAudioRecorder
@@ -73,6 +75,15 @@ struct MeetingView: View {
         .sheet(isPresented: $showPromptEditor) {
             promptEditorSheet
         }
+        .fileImporter(
+            isPresented: $showImportFilePicker,
+            allowedContentTypes: [.plainText],
+            allowsMultipleSelection: false
+        ) { result in
+            Task {
+                await handleImportedFile(result)
+            }
+        }
         .onDisappear {
             // Cleanup when window closes
             if meetingState.isRecording {
@@ -110,9 +121,17 @@ struct MeetingView: View {
                         .frame(width: 8, height: 8)
                 }
 
-                Text(meetingState.statusMessage)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(meetingState.statusMessage)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    if let fileName = importedFileName {
+                        Text("Imported: \(fileName)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
 
             Spacer()
@@ -234,6 +253,12 @@ struct MeetingView: View {
 
     // MARK: - Controls
 
+    // MARK: - Helper Properties
+
+    private var isImportedTranscript: Bool {
+        importedFileName != nil && !meetingState.isRecording
+    }
+
     private var controlsView: some View {
         HStack(spacing: 16) {
             // Start/Stop button
@@ -256,18 +281,44 @@ struct MeetingView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(meetingState.isRecording ? .red : .blue)
-            .disabled(meetingState.statusMessage.contains("Processing"))
+            .disabled(meetingState.statusMessage.contains("Processing") || isImportedTranscript)
 
-            // Clear transcript button
-            Button {
-                clearTranscript()
-            } label: {
-                HStack {
-                    Image(systemName: "trash")
-                    Text("Clear")
+            // Import button (visible when not recording and no import loaded)
+            if !isImportedTranscript && !meetingState.isRecording {
+                Button {
+                    showImportFilePicker = true
+                } label: {
+                    HStack {
+                        Image(systemName: "square.and.arrow.down")
+                        Text("Import Transcript")
+                    }
                 }
             }
-            .disabled(meetingState.segments.isEmpty)
+
+            // Clear import button (visible when transcript is imported)
+            if isImportedTranscript {
+                Button {
+                    clearImport()
+                } label: {
+                    HStack {
+                        Image(systemName: "xmark.circle")
+                        Text("Clear Import")
+                    }
+                }
+            }
+
+            // Clear transcript button (visible when recording or has segments but not imported)
+            if !isImportedTranscript {
+                Button {
+                    clearTranscript()
+                } label: {
+                    HStack {
+                        Image(systemName: "trash")
+                        Text("Clear")
+                    }
+                }
+                .disabled(meetingState.segments.isEmpty)
+            }
 
             // Generate notes button
             Button {
@@ -428,6 +479,58 @@ struct MeetingView: View {
         meetingState.structuredNotes = nil
         meetingState.elapsedTime = 0
         meetingState.statusMessage = "Ready to start"
+    }
+
+    private func clearImport() {
+        meetingState.segments.removeAll()
+        meetingState.structuredNotes = nil
+        importedFileName = nil
+        meetingState.elapsedTime = 0
+        meetingState.statusMessage = "Ready to start"
+    }
+
+    // MARK: - Import Handling
+
+    private func handleImportedFile(_ result: Result<[URL], Error>) async {
+        switch result {
+        case .success(let urls):
+            guard let url = urls.first else { return }
+            await importTranscript(from: url)
+        case .failure(let error):
+            meetingState.statusMessage = "Import failed: \(error.localizedDescription)"
+        }
+    }
+
+    private func importTranscript(from url: URL) async {
+        meetingState.statusMessage = "Importing transcript..."
+
+        do {
+            // Parse the file
+            let parser = TranscriptParser()
+            let segments = try parser.parseZoomTranscript(fileURL: url)
+
+            // Validate we got segments
+            guard !segments.isEmpty else {
+                meetingState.statusMessage = "No segments found in file"
+                return
+            }
+
+            // Update state
+            meetingState.segments = segments
+            meetingState.statusMessage = "Imported \(segments.count) segments from \(url.lastPathComponent)"
+            importedFileName = url.lastPathComponent
+
+            // Calculate total duration
+            if let lastSegment = segments.last {
+                meetingState.elapsedTime = lastSegment.endTime
+            }
+
+            print("MeetingView: Successfully imported \(segments.count) segments from \(url.lastPathComponent)")
+
+        } catch {
+            print("MeetingView: Import error - \(error)")
+            meetingState.statusMessage = "Import error: \(error.localizedDescription)"
+        }
     }
 
     // MARK: - Structured Notes Generation
